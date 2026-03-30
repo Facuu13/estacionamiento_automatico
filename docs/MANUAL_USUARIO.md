@@ -18,9 +18,10 @@ Hasta que el pago no esté **aprobado**, no podés autorizar la salida.
 
 ## 3. Salida
 
-1. En la salida, escaneá el **QR de salida** (o abrí el enlace que te dio el sistema al ingresar).
-2. Si hace falta, pegá el **token de salida** que recibiste al registrar el ingreso.
-3. Tocá **Abrir barrera**. Si el pago está confirmado, la barrera recibe la orden de abrir unos segundos.
+1. **En producción**, en la barrera hay un **cartel con un QR** impreso: al escanearlo se abre esta misma pantalla con el token ya cargado.
+2. **En prueba desde tu PC o celular**, el sistema también **muestra el mismo QR en la pantalla** (pantalla de pago y pantalla de salida), para que puedas probar escaneándolo con otro dispositivo.
+3. Si no querés usar el QR, podés **pegar el token de salida** que se guardó al registrar el ingreso (o copiarlo si lo tenés a mano).
+4. Tocá **Abrir barrera**. Si el pago está confirmado, el backend autoriza la salida (en hardware real, el ESP32 abriría el relé unos segundos).
 
 Si el pago está pendiente o fue rechazado, verás un mensaje indicando que no podés salir todavía.
 

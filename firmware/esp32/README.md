@@ -8,20 +8,23 @@
 
 ## Configuración
 
-1. Copiá `src/config.local.h` (no versionar) con:
+1. Copiá `src/config.local.h` (no versionar; ya está en `.gitignore`) con tu WiFi y la IP de tu PC donde corre la API.
 
-```cpp
-#define WIFI_SSID "tu_red"
-#define WIFI_PASS "tu_clave"
-#define API_BASE_URL "http://IP_DE_TU_PC:8000"
-#define DEVICE_ID "gate-01"
-```
-
-2. Compilá y subí:
+2. **Compilar y subir al ESP32** (con el USB conectado y el driver del puerto serie instalado):
 
 ```bash
 cd firmware/esp32
-pio run -t upload
+python3 -m venv .pio-venv
+.pio-venv/bin/pip install platformio
+.pio-venv/bin/pio run -t upload
+```
+
+Si `pio` no encuentra el puerto: `ls /dev/ttyUSB* /dev/ttyACM*` y `pio run -t upload --upload-port /dev/ttyUSB0`.
+
+3. Monitor serie (115200 baud) para ver WiFi y heartbeats:
+
+```bash
+.pio-venv/bin/pio device monitor -b 115200
 ```
 
 ## OTA

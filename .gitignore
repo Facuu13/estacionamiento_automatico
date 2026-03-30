@@ -14,3 +14,5 @@ dist/
 *.egg-info/
 .DS_Store
 firmware/esp32/src/config.local.h
+firmware/esp32/.pio-venv/
+firmware/esp32/.pio/

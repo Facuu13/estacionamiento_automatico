@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import { ExitQrPanel } from "@/components/ExitQrPanel";
 import { verifyExit } from "@/lib/api";
 
 export default function SalidaClient() {
@@ -16,6 +17,11 @@ export default function SalidaClient() {
     const t = sp.get("t");
     if (t) setToken(t);
   }, [sp]);
+
+  const exitUrl = useMemo(() => {
+    if (!token.trim() || typeof window === "undefined") return "";
+    return `${window.location.origin}/salida?t=${encodeURIComponent(token.trim())}`;
+  }, [token]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -38,7 +44,11 @@ export default function SalidaClient() {
     <div className="container">
       <div className="card">
         <h1>Salida</h1>
-        <p className="lead">Escaneá el QR de salida o pegá el token que recibiste al ingresar.</p>
+        <p className="lead">
+          En la calle, el cartel de la barrera llevaría un <strong>QR igual a este</strong>. En prueba, podés pegar el
+          token abajo o escanear el código con la cámara del celular.
+        </p>
+        {exitUrl ? <ExitQrPanel exitUrl={exitUrl} /> : null}
         <form onSubmit={submit}>
           <label htmlFor="token">Token de salida</label>
           <input

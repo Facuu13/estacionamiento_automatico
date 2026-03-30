@@ -6,11 +6,10 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-#include "config.h"
-
 #if __has_include("config.local.h")
 #include "config.local.h"
 #endif
+#include "config.h"
 
 static unsigned long lastHb = 0;
 

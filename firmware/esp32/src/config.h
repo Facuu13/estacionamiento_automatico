@@ -1,9 +1,11 @@
 #pragma once
 
-// Copiar a config.local.h (no versionar) o definir por build_flags.
+/** Valores por defecto; sobreescribir con config.local.h (incluilo antes de este archivo). */
+
 #ifndef WIFI_SSID
 #define WIFI_SSID "tu_red"
 #endif
+
 #ifndef WIFI_PASS
 #define WIFI_PASS "tu_clave"
 #endif
