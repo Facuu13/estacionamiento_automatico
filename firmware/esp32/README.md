@@ -29,7 +29,9 @@ Si `pio` no encuentra el puerto: `ls /dev/ttyUSB* /dev/ttyACM*` y `pio run -t up
 
 4. **HMAC**: en `config.local.h` definí `DEVICE_HMAC_SECRET` **igual** que `DEVICE_HMAC_SECRET` del backend (`.env` / `docker-compose`). Sin eso el ESP32 rechazará los comandos.
 
-5. **Salida**: cuando un conductor autoriza salida en la web, el backend encola un comando `pulse` para `DEFAULT_GATE_DEVICE_ID` (por defecto `gate-01`). El ESP32 lo recibe en la respuesta JSON del **heartbeat**, verifica la firma, **enciende el LED integrado y el pin `RELAY_PIN`** el tiempo indicado, y envía **ACK**. El LED suele ser activo en bajo (se enciende al abrir).
+5. **Ingreso**: al registrar la patente, el backend encola un `pulse` para `ENTRY_GATE_DEVICE_ID` (por defecto distinto de la salida en `docker-compose`; podés usar el mismo `DEVICE_ID` que la salida solo en pruebas con un único ESP32, aceptando dos pulsos en cola).
+
+6. **Salida**: cuando el pago está aprobado y el conductor autoriza salida en la web, el backend encola un `pulse` para `DEFAULT_GATE_DEVICE_ID` (por defecto `gate-01`). El ESP32 lo recibe en la respuesta JSON del **heartbeat**, verifica la firma, **enciende el LED integrado y el pin `RELAY_PIN`** el tiempo indicado, y envía **ACK**. El LED suele ser activo en bajo (se enciende al abrir).
 
 ## OTA
 

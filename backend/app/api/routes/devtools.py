@@ -10,6 +10,7 @@ from app.config import get_settings
 from app.database import get_db
 from app.models.payment import Payment, PaymentStatus
 from app.models.session import ParkingSession, SessionStatus
+from app.services.pricing import compute_amount_cents
 
 router = APIRouter(prefix="/api/v1/dev", tags=["dev"])
 
@@ -26,6 +27,18 @@ def simulate_payment(
     session = db.get(ParkingSession, session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Sesión no encontrada")
+    if session.status not in (SessionStatus.ACTIVE, SessionStatus.PENDING_PAYMENT):
+        raise HTTPException(status_code=400, detail="La sesión no admite simulación de pago")
+
+    entered = session.created_at
+    if entered and entered.tzinfo is None:
+        entered = entered.replace(tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
+    amount = (
+        compute_amount_cents(entered, now, settings)
+        if entered
+        else settings.parking_minimum_cents
+    )
 
     pay = (
         db.query(Payment)
@@ -38,12 +51,13 @@ def simulate_payment(
             id=uuid.uuid4(),
             session_id=session_id,
             status=PaymentStatus.APPROVED,
-            amount_cents=100_00,
+            amount_cents=amount,
             mp_payment_id=f"mock_pay_{session_id.hex[:8]}",
         )
         db.add(pay)
     else:
         pay.status = PaymentStatus.APPROVED
+        pay.amount_cents = amount
         pay.mp_payment_id = pay.mp_payment_id or f"mock_pay_{session_id.hex[:8]}"
 
     session.status = SessionStatus.PAID

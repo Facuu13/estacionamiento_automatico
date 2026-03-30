@@ -69,4 +69,4 @@ npm run test:e2e
 
 ## Firmware ESP32
 
-Ver [`firmware/esp32`](firmware/esp32): copiá `config.local.h` con WiFi, URL del API y el mismo `DEVICE_HMAC_SECRET` que el backend. Tras **Abrir barrera** en la web, el ESP32 recibe un comando firmado en el heartbeat, pulsa el **LED** y el **relé** (`RELAY_PIN`), y envía ACK.
+Ver [`firmware/esp32`](firmware/esp32): copiá `config.local.h` con WiFi, URL del API y el mismo `DEVICE_HMAC_SECRET` que el backend. Configurá `DEVICE_ID` igual a `DEFAULT_GATE_DEVICE_ID` (salida) o `ENTRY_GATE_DEVICE_ID` (ingreso) según el molinete. Tras registrar ingreso o **Abrir barrera** en salida, el ESP32 correspondiente recibe un comando firmado en el heartbeat, pulsa el **LED** y el **relé** (`RELAY_PIN`), y envía ACK.

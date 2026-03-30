@@ -8,6 +8,7 @@ from app.config import get_settings
 from app.database import get_db
 from app.models.session import ParkingSession, SessionStatus
 from app.schemas.entry import EntryCreate, EntryResponse
+from app.services.gate_pulse import RELAY_SECONDS_DEFAULT, enqueue_gate_pulse
 
 router = APIRouter(prefix="/api/v1/entry", tags=["entry"])
 
@@ -23,10 +24,11 @@ def create_entry(
         id=uuid.uuid4(),
         license_plate=body.license_plate.upper().replace(" ", ""),
         gate_code=body.gate_code,
-        status=SessionStatus.PENDING_PAYMENT,
+        status=SessionStatus.ACTIVE,
         exit_token=exit_token,
     )
     db.add(session)
+    enqueue_gate_pulse(db, settings, settings.entry_gate_device_id, RELAY_SECONDS_DEFAULT)
     db.commit()
     db.refresh(session)
 

@@ -12,6 +12,7 @@ os.environ.setdefault("DEVICE_HMAC_SECRET", "test_device_hmac_secret_32_chars_mi
 os.environ.setdefault("SESSION_SIGNING_SECRET", "test_session_signing")
 os.environ.setdefault("FRONTEND_PUBLIC_URL", "http://localhost:3000")
 os.environ.setdefault("BACKEND_PUBLIC_URL", "http://localhost:8000")
+os.environ.setdefault("ENTRY_GATE_DEVICE_ID", "gate-entry-test")
 
 
 @pytest.fixture

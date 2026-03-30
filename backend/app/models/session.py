@@ -11,6 +11,7 @@ from app.database import Base
 
 class SessionStatus(str, enum.Enum):
     PENDING_PAYMENT = "pending_payment"
+    ACTIVE = "active"
     PAID = "paid"
     EXITED = "exited"
 
@@ -27,7 +28,7 @@ class ParkingSession(Base):
             name="session_status",
             values_callable=lambda obj: [m.value for m in obj],
         ),
-        default=SessionStatus.PENDING_PAYMENT,
+        default=SessionStatus.ACTIVE,
     )
     exit_token: Mapped[str] = mapped_column(String(128), unique=True, index=True)
     created_at: Mapped[datetime] = mapped_column(

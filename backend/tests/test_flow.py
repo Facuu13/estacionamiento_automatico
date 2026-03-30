@@ -15,6 +15,17 @@ def test_full_flow_entry_checkout_simulate_exit(client):
     session_id = data["session_id"]
     exit_token = data["exit_token"]
 
+    r = client.get(f"/api/v1/sessions/{session_id}")
+    assert r.status_code == 200
+    assert r.json()["status"] == "active"
+
+    r = client.get(f"/api/v1/exit/preview?exit_token={exit_token}")
+    assert r.status_code == 200
+    preview = r.json()
+    assert preview["license_plate"] == "AB123CD"
+    assert preview["status"] == "active"
+    assert preview["amount_cents"] >= 100
+
     r = client.post("/api/v1/payments/checkout", json={"session_id": session_id})
     assert r.status_code == 200, r.text
     assert r.json().get("init_point")

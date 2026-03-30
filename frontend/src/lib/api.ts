@@ -39,6 +39,24 @@ export async function getSession(session_id: string) {
     session_id: string;
     status: string;
     license_plate: string;
+    created_at: string;
+    paid_at: string | null;
+  }>;
+}
+
+export async function getExitPreview(exit_token: string) {
+  const r = await fetch(
+    apiUrl(`/api/v1/exit/preview?exit_token=${encodeURIComponent(exit_token)}`),
+    { cache: "no-store" },
+  );
+  if (!r.ok) throw new Error(await r.text());
+  return r.json() as Promise<{
+    session_id: string;
+    license_plate: string;
+    status: string;
+    created_at: string;
+    duration_seconds: number;
+    amount_cents: number;
     paid_at: string | null;
   }>;
 }

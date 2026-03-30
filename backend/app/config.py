@@ -17,9 +17,15 @@ class Settings(BaseSettings):
     mock_payments: bool = True
 
     device_hmac_secret: str = "dev_change_me"
-    # ESP32 que recibe el pulso (mismo id que en firmware DEVICE_ID)
+    # ESP32 salida (mismo id que en firmware DEVICE_ID)
     default_gate_device_id: str = "gate-01"
+    # Barrera de ingreso (otro ESP32 o el mismo id si comparten lógica de cola)
+    entry_gate_device_id: str = "gate-01"
     session_signing_secret: str = "dev_session_secret"
+
+    parking_price_per_minute_cents: int = 50
+    parking_minimum_cents: int = 100
+    parking_grace_seconds: int = 0
 
 
 @lru_cache

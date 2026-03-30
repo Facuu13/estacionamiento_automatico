@@ -30,6 +30,8 @@ def _apply_payment_approved(db: Session, session_id: uuid.UUID, mp_payment_id: s
     session = db.get(ParkingSession, session_id)
     if not session:
         return
+    if session.status not in (SessionStatus.ACTIVE, SessionStatus.PENDING_PAYMENT):
+        return
     pay = (
         db.query(Payment)
         .filter(Payment.session_id == session_id)

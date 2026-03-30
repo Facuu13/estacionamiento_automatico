@@ -1,11 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { postEntry } from "@/lib/api";
 
 export default function IngresoPage() {
   const router = useRouter();
+  const [gateFromUrl, setGateFromUrl] = useState("A1");
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const g = p.get("gate_code")?.trim();
+    if (g) setGateFromUrl(g);
+  }, []);
   const [plate, setPlate] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -15,11 +22,11 @@ export default function IngresoPage() {
     setErr(null);
     setLoading(true);
     try {
-      const r = await postEntry(plate.trim(), "A1");
+      const r = await postEntry(plate.trim(), gateFromUrl);
       if (typeof window !== "undefined") {
         sessionStorage.setItem(`exit_${r.session_id}`, r.exit_token);
       }
-      router.push(`/pago/${r.session_id}`);
+      router.push(`/ticket/${r.session_id}`);
     } catch (ex) {
       setErr(ex instanceof Error ? ex.message : "Error al registrar");
     } finally {
@@ -32,6 +39,9 @@ export default function IngresoPage() {
       <div className="card">
         <h1>Ingreso</h1>
         <p className="lead">Ingresá la patente del vehículo (como figura en la cédula).</p>
+        <p className="lead" style={{ fontSize: "0.9rem", opacity: 0.9 }}>
+          Molinete: <strong>{gateFromUrl}</strong>
+        </p>
         <form onSubmit={onSubmit}>
           <label htmlFor="plate">Patente</label>
           <input
@@ -48,7 +58,7 @@ export default function IngresoPage() {
           {err && <p className="msg-err">{err}</p>}
           <div style={{ marginTop: "1rem" }}>
             <button className="btn" type="submit" disabled={loading}>
-              {loading ? "Registrando…" : "Continuar al pago"}
+              {loading ? "Registrando…" : "Obtener ticket y abrir barrera"}
             </button>
           </div>
         </form>

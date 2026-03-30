@@ -1,4 +1,19 @@
+import uuid
+from datetime import datetime
+
 from pydantic import BaseModel, Field
+
+from app.models.session import SessionStatus
+
+
+class ExitPreviewOut(BaseModel):
+    session_id: uuid.UUID
+    license_plate: str
+    status: SessionStatus
+    created_at: datetime
+    duration_seconds: int
+    amount_cents: int
+    paid_at: datetime | None
 
 
 class ExitVerifyIn(BaseModel):

@@ -10,4 +10,5 @@ class SessionStatusResponse(BaseModel):
     session_id: uuid.UUID
     status: SessionStatus
     license_plate: str
+    created_at: datetime
     paid_at: datetime | None

@@ -54,13 +54,14 @@ Ejecutá en orden con el stack local y `MOCK_PAYMENTS=true` (por defecto en `doc
 
 | # | Acción | Resultado esperado |
 |---|--------|---------------------|
-| 1 | Abrí http://localhost:3000 | Página de inicio con enlace a ingreso |
-| 2 | Ingreso con patente `TEST01` | Redirección a `/pago/<uuid>` |
-| 3 | Pulsar **Ir a pagar** | Redirección a página de éxito simulada (`/pago/exito?...&mock=1`) |
-| 4 | Tras simular pago, ir a **Salida** con el token (o seguir el flujo automático si guardaste el token en el navegador) | Mensaje de salida autorizada |
-| 5 | Intentar **Salida** otra vez con el mismo token | Mensaje de que ya saliste (no autoriza de nuevo) |
-| 6 | `GET http://localhost:8000/health` | `{"status":"ok"}` |
-| 7 | `GET http://localhost:8000/ready` | `{"status":"ready"}` (requiere DB) |
+| 1 | Abrí http://localhost:3000 | Página de inicio con enlace a ingreso y a QR de entrada (`/entrada`) |
+| 2 | Ingreso con patente `TEST01` | Redirección a `/ticket/<uuid>` con ticket digital y QR de salida |
+| 3 | Abrí **Salida** (enlace del ticket o `/salida?t=...`) | Se muestra tiempo estimado y monto; botón **Pagar con Mercado Pago** |
+| 4 | Pulsar **Pagar con Mercado Pago** | Redirección a página de éxito simulada (`/pago/exito?...&mock=1`) y luego a salida con token |
+| 5 | Con pago simulado, **Abrir barrera** | Mensaje de salida autorizada |
+| 6 | Intentar **Salida** otra vez con el mismo token | Mensaje de que ya saliste (no autoriza de nuevo) |
+| 7 | `GET http://localhost:8000/health` | `{"status":"ok"}` |
+| 8 | `GET http://localhost:8000/ready` | `{"status":"ready"}` (requiere DB) |
 
 ## 5. Mercado Pago real (sandbox)
 

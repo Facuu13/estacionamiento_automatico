@@ -22,5 +22,6 @@ def get_session(
         session_id=row.id,
         status=row.status,
         license_plate=row.license_plate,
+        created_at=row.created_at,
         paid_at=row.paid_at,
     )
