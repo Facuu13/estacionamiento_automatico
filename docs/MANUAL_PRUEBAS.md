@@ -77,3 +77,14 @@ Los **webhooks** en local requieren una URL pública (ngrok, Cloudflare Tunnel, 
 1. Copiá `firmware/esp32/src/config.local.h` con `WIFI_SSID`, `WIFI_PASS`, `API_BASE_URL` (IP de tu PC en la LAN) y `DEVICE_ID`.
 2. Compilá y subí con PlatformIO.
 3. Verificá en la API `GET /api/v1/devices/<device_id>` que actualiza `last_heartbeat_at` tras los heartbeats.
+
+### Smoke test rápido (API + mismo `DEVICE_ID` que el firmware)
+
+Con la API levantada (`docker compose` o `uvicorn`):
+
+```bash
+chmod +x scripts/smoke_esp32.sh
+API_URL=http://localhost:8000 DEVICE_ID=gate-01 ./scripts/smoke_esp32.sh
+```
+
+Con el ESP32 encendido y en la misma red, en el monitor serie deberías ver heartbeats periódicos; tras autorizar una **salida** (o un **ingreso** si usás el `DEVICE_ID` de entrada), el siguiente heartbeat puede traer un `command` con `action: pulse` y el relé pulsará si la firma coincide con `DEVICE_HMAC_SECRET`.
