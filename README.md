@@ -69,4 +69,4 @@ npm run test:e2e
 
 ## Firmware ESP32
 
-Ver [`firmware/esp32`](firmware/esp32): copiá `config.local.h` con WiFi y URL del API (no versionar secretos).
+Ver [`firmware/esp32`](firmware/esp32): copiá `config.local.h` con WiFi, URL del API y el mismo `DEVICE_HMAC_SECRET` que el backend. Tras **Abrir barrera** en la web, el ESP32 recibe un comando firmado en el heartbeat, pulsa el **LED** y el **relé** (`RELAY_PIN`), y envía ACK.

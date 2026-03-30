@@ -27,6 +27,10 @@ Si `pio` no encuentra el puerto: `ls /dev/ttyUSB* /dev/ttyACM*` y `pio run -t up
 .pio-venv/bin/pio device monitor -b 115200
 ```
 
+4. **HMAC**: en `config.local.h` definí `DEVICE_HMAC_SECRET` **igual** que `DEVICE_HMAC_SECRET` del backend (`.env` / `docker-compose`). Sin eso el ESP32 rechazará los comandos.
+
+5. **Salida**: cuando un conductor autoriza salida en la web, el backend encola un comando `pulse` para `DEFAULT_GATE_DEVICE_ID` (por defecto `gate-01`). El ESP32 lo recibe en la respuesta JSON del **heartbeat**, verifica la firma, **enciende el LED integrado y el pin `RELAY_PIN`** el tiempo indicado, y envía **ACK**. El LED suele ser activo en bajo (se enciende al abrir).
+
 ## OTA
 
 Este MVP deja la estructura lista para añadir actualización OTA (por ejemplo `HTTPUpdate` de ESP32) apuntando a un artefacto firmado servido por tu backend; no está cableado para no requerir certificados y URLs de producción.

@@ -18,10 +18,16 @@
 #define DEVICE_ID "gate-01"
 #endif
 
+/** Debe ser idéntico a DEVICE_HMAC_SECRET del backend (docker-compose / .env). */
+#ifndef DEVICE_HMAC_SECRET
+#define DEVICE_HMAC_SECRET "dev_cambiar_en_produccion_minimo_32_chars_xx"
+#endif
+
+/** Relé externo (active-high = ON). */
 #ifndef RELAY_PIN
 #define RELAY_PIN 4
 #endif
 
 #ifndef HEARTBEAT_INTERVAL_MS
-#define HEARTBEAT_INTERVAL_MS 30000
+#define HEARTBEAT_INTERVAL_MS 3000
 #endif

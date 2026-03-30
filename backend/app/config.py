@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     mock_payments: bool = True
 
     device_hmac_secret: str = "dev_change_me"
+    # ESP32 que recibe el pulso (mismo id que en firmware DEVICE_ID)
+    default_gate_device_id: str = "gate-01"
     session_signing_secret: str = "dev_session_secret"
 
 

@@ -6,6 +6,16 @@ class HeartbeatIn(BaseModel):
     rssi: int | None = None
 
 
+class DevicePulseCommand(BaseModel):
+    id: str
+    action: str = "pulse"
+    seconds: int
+    nonce: str
+    ts: int
+    signature: str
+
+
 class HeartbeatOut(BaseModel):
     ok: bool
     server_time: str
+    command: DevicePulseCommand | None = None

@@ -26,6 +26,7 @@ services:
       CORS_ORIGINS: http://localhost:3000
       MOCK_PAYMENTS: "true"
       DEVICE_HMAC_SECRET: dev_cambiar_en_produccion_minimo_32_chars_xx
+      DEFAULT_GATE_DEVICE_ID: gate-01
       SESSION_SIGNING_SECRET: dev_session_signing_secret_cambiar
     ports:
       - "8000:8000"

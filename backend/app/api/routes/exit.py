@@ -1,12 +1,17 @@
-from datetime import datetime, timezone
+import secrets
+import time
+import uuid
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.config import get_settings
 from app.database import get_db
+from app.models.device_command import DeviceCommand
 from app.models.session import ParkingSession, SessionStatus
 from app.schemas.exit import ExitVerifyIn, ExitVerifyOut
-from app.services.gate_signing import sign_open_command
+from app.services.gate_signing import sign_device_pulse_command, sign_open_command
 
 router = APIRouter(prefix="/api/v1/exit", tags=["exit"])
 
@@ -18,6 +23,7 @@ def verify_exit(
     body: ExitVerifyIn,
     db: Session = Depends(get_db),
 ) -> ExitVerifyOut:
+    settings = get_settings()
     row = (
         db.query(ParkingSession)
         .filter(ParkingSession.exit_token == body.exit_token)
@@ -45,6 +51,20 @@ def verify_exit(
     sig, ts = sign_open_command(row.exit_token)
     row.status = SessionStatus.EXITED
     row.exited_at = datetime.now(timezone.utc)
+
+    nonce = secrets.token_hex(16)
+    pulse_ts = int(time.time())
+    pulse_sig = sign_device_pulse_command(settings.default_gate_device_id, nonce, pulse_ts)
+    cmd = DeviceCommand(
+        id=uuid.uuid4(),
+        device_id=settings.default_gate_device_id,
+        nonce=nonce,
+        ts=pulse_ts,
+        pulse_seconds=RELAY_SECONDS,
+        signature_hex=pulse_sig,
+        expires_at=datetime.now(timezone.utc) + timedelta(seconds=120),
+    )
+    db.add(cmd)
     db.commit()
 
     return ExitVerifyOut(
